@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExampleBackgroundTasks\ExampleBackgroundTasks.csproj" />
     <ProjectReference Include="..\ExampleWebApp\ExampleWebApp.csproj" />
     <ProjectReference Include="..\MultipleHostedService\MultipleHostedService.csproj" />
   </ItemGroup>
