@@ -8,11 +8,18 @@ namespace MultipleHostedService
     public interface ICalcDelayTillRunTask
     {
         /// <summary>
+        /// This is the timezone you wish to use. The RecurringBackgroundRunner uses this to
+        /// work out the local time from DateTime.UtcNow.
+        /// If null, then the DateTime.UtcNow time used
+        /// </summary>
+        TimeZoneInfo TimeZoneToUse { get; }
+
+        /// <summary>
         /// This method should how long a delay should be applied before the task is run
         /// </summary>
-        /// <param name="utcNow">This is given the value of DateTime.UtcNow by the RecurringBackgroundRunner.
+        /// <param name="localTime">The RecurringBackgroundRunner provides the current UTC time converted to your timezone.
         /// The reason for having this parameter is to allow you to check your delay calculations with  </param>
         /// <returns></returns>
-        TimeSpan TimeToWait(DateTime utcNow);
+        TimeSpan TimeToWait(DateTime localTime);
     }
 }
