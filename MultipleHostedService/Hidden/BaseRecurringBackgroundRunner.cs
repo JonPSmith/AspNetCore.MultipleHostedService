@@ -63,7 +63,7 @@ namespace MultipleHostedService.Hidden
 
         private async Task GetScopedTaskAndCallAsync(TimeSpan delayTime)
         {
-            _logger.LogDebug($"Delay was {delayTime:g}. The time is now {DateTime.UtcNow:T}.");
+            _logger.LogDebug($"Delay was {delayTime:g} provided by {typeof(TDelay).Name}.");
 
             using (var scope = _services.CreateScope())
             {
