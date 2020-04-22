@@ -8,11 +8,11 @@ using MultipleHostedService;
 
 namespace ExampleBackgroundTasks
 {
-    public class RunsImmediatelyFor1Sec : IBackgroundTaskToCall
+    public class RunsImmediatelyFor10Secs : IBackgroundTaskToCall
     {
-        private readonly ILogger<RunsImmediatelyFor1Sec> _logger;
+        private readonly ILogger<RunsImmediatelyFor10Secs> _logger;
 
-        public RunsImmediatelyFor1Sec(ILogger<RunsImmediatelyFor1Sec> logger)
+        public RunsImmediatelyFor10Secs(ILogger<RunsImmediatelyFor10Secs> logger)
         {
             _logger = logger;
         }
@@ -20,10 +20,14 @@ namespace ExampleBackgroundTasks
         public async Task MethodToRunAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("I have started.");
-            await Task.Delay(500);
-            _logger.LogInformation("I delayed by 1/2 sec.");
-            await Task.Delay(500);
-            _logger.LogInformation("I finished after 1 second.");
+            for (int i = 1; i < 10; i++)
+            {
+                await Task.Delay(1000);
+                _logger.LogInformation($"{i}: I delayed for 1 sec.");
+            }
+
+            await Task.Delay(1000);
+            _logger.LogInformation("I finished after 10 seconds.");
         }
     }
 }

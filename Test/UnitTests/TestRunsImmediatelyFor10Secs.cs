@@ -12,7 +12,7 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace Test.UnitTests
 {
-    public class TestRunsImmediatelyFor1Sec
+    public class TestRunsImmediatelyFor10Secs
     {
 
         [Fact]
@@ -21,8 +21,8 @@ namespace Test.UnitTests
             //SETUP
 
             var logs = new List<LogOutput>();
-            var logger = new Logger<RunsImmediatelyFor1Sec>(new LoggerFactory(new[] {new MyLoggerProvider(logs)}));
-            var bg = new RunsImmediatelyFor1Sec(logger);
+            var logger = new Logger<RunsImmediatelyFor10Secs>(new LoggerFactory(new[] {new MyLoggerProvider(logs)}));
+            var bg = new RunsImmediatelyFor10Secs(logger);
 
             //ATTEMPT
             var start = DateTime.UtcNow;
@@ -33,8 +33,8 @@ namespace Test.UnitTests
             var end = DateTime.UtcNow;
 
             //VERIFY
-            logs.Count.ShouldEqual(3);
-            end.Subtract(start).TotalMilliseconds.ShouldBeInRange(1000, 1200 );
+            logs.Count.ShouldEqual(11);
+            end.Subtract(start).TotalMilliseconds.ShouldBeInRange(10000, 11000 );
         }
     }
 }

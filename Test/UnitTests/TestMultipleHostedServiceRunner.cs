@@ -38,10 +38,10 @@ namespace Test.UnitTests
             services.AddTransient<RunsEvery10Seconds>();
             services.AddTransient<DelayOverride2Sec>();
             services.AddTransient<NightlyRun1Am>();
-            services.AddTransient<RunsImmediatelyFor1Sec>();
+            services.AddTransient<RunsImmediatelyFor10Secs>();
             services.AddTransient<IOneBackgroundService, RecurringBackgroundRunner<RunsEvery10Seconds>>();
             services.AddTransient<IOneBackgroundService, RecurringBackgroundRunner<NightlyRun1Am, DelayOverride2Sec>>();//Overrides normal delay
-            services.AddTransient<IOneBackgroundService, NonRecurringBackgroundRunner<RunsImmediatelyFor1Sec>>();
+            services.AddTransient<IOneBackgroundService, NonRecurringBackgroundRunner<RunsImmediatelyFor10Secs>>();
             var serviceProvider = services.BuildServiceProvider();
 
             //ATTEMPT

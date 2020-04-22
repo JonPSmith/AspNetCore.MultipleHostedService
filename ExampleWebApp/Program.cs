@@ -21,11 +21,11 @@ namespace ExampleWebApp
                     services.AddTransient<RunsEvery10Seconds>();
                     services.AddTransient<DelayOverride2Sec>();
                     services.AddTransient<NightlyRun1Am>();
-                    services.AddTransient<RunsImmediatelyFor1Sec>();
+                    services.AddTransient<RunsImmediatelyFor10Secs>();
                     //Now register the services as something you want to run via the HostedService
                     services.AddTransient<IOneBackgroundService, RecurringBackgroundRunner<RunsEvery10Seconds>>();
                     services.AddTransient<IOneBackgroundService, RecurringBackgroundRunner<NightlyRun1Am, DelayOverride2Sec>>();//Overrides normal delay
-                    services.AddTransient<IOneBackgroundService, NonRecurringBackgroundRunner<RunsImmediatelyFor1Sec>>();
+                    services.AddTransient<IOneBackgroundService, NonRecurringBackgroundRunner<RunsImmediatelyFor10Secs>>();
                     //You can only register ONE service to be run by the HostedService
                     //So you register the MultipleHostedServiceRunner which will run in parallel ALL the classes you registered as IOneBackgroundService 
                     services.AddHostedService<MultipleHostedServiceRunner>();
