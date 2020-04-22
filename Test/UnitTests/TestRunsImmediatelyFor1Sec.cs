@@ -26,7 +26,7 @@ namespace Test.UnitTests
 
             //ATTEMPT
             var start = DateTime.UtcNow;
-            var task = bg.MethodToRunAsync();
+            var task = bg.MethodToRunAsync(default);
             await Task.Delay(10);
             logs.Count.ShouldEqual(1);
             await task;

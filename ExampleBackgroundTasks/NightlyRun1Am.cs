@@ -2,6 +2,7 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MultipleHostedService;
@@ -19,7 +20,7 @@ namespace ExampleBackgroundTasks
             TimeZoneToUse = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
         }
 
-        public Task MethodToRunAsync()
+        public Task MethodToRunAsync(CancellationToken cancellationToken)
         {
             var utcNow = DateTime.UtcNow;
             var localTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, TimeZoneToUse);

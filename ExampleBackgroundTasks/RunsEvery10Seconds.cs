@@ -2,6 +2,7 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MultipleHostedService;
@@ -17,7 +18,7 @@ namespace ExampleBackgroundTasks
             _logger = logger;
         }
 
-        public Task MethodToRunAsync()
+        public Task MethodToRunAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Task ran at UTC {DateTime.UtcNow:T}.");
 

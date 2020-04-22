@@ -3,7 +3,7 @@
 
 using System;
 using Microsoft.Extensions.Logging;
-using MultipleHostedService.Hidden;
+using MultipleHostedService.PublicButHidden;
 
 namespace MultipleHostedService
 {

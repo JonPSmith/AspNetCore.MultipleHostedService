@@ -30,11 +30,12 @@ namespace MultipleHostedService
 
             using (var scope = _services.CreateScope())
             {
-                var taskToCall = scope.ServiceProvider.GetRequiredService<TTaskToRun>();
-
+                var taskToCall = scope.ServiceProvider.GetService<TTaskToRun>();
+                if (taskToCall == null)
+                    throw new NullReferenceException($"The class {typeof(TTaskToRun).Name} was not found as a service.");
                 try
                 {
-                    await taskToCall.MethodToRunAsync().ConfigureAwait(false);
+                    await taskToCall.MethodToRunAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

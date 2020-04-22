@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MultipleHostedService;
@@ -16,7 +17,7 @@ namespace ExampleBackgroundTasks
             _logger = logger;
         }
 
-        public async Task MethodToRunAsync()
+        public async Task MethodToRunAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("I have started.");
             await Task.Delay(500);

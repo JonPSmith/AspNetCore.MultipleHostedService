@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace MultipleHostedService.Hidden
+namespace MultipleHostedService.PublicButHidden
 {
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace MultipleHostedService.Hidden
     /// </summary>
     /// <typeparam name="TTaskToRun"></typeparam>
     /// <typeparam name="TDelay"></typeparam>
-    public class BaseRecurringBackgroundRunner<TTaskToRun, TDelay> : IOneBackgroundService
+    public abstract class BaseRecurringBackgroundRunner<TTaskToRun, TDelay> : IOneBackgroundService
         where TTaskToRun : IBackgroundTaskToCall where TDelay : ICalcDelayTillRunTask 
     {
         private readonly TDelay _delayCalc;
@@ -43,7 +43,7 @@ namespace MultipleHostedService.Hidden
                 var delayTime = _delayCalc.TimeToWait(localTime);
                 await Task.Delay(delayTime, _stopCancellationToken).ConfigureAwait(false);
                 if (!_stopCancellationToken.IsCancellationRequested)
-                    await GetScopedTaskAndCallAsync(delayTime).ConfigureAwait(false);
+                    await GetScopedTaskAndCallAsync(cancellationToken, delayTime).ConfigureAwait(false);
             }
         }
 
@@ -61,7 +61,7 @@ namespace MultipleHostedService.Hidden
         //-------------------------------------------------------
         //private methods
 
-        private async Task GetScopedTaskAndCallAsync(TimeSpan delayTime)
+        private async Task GetScopedTaskAndCallAsync(CancellationToken cancellationToken, TimeSpan delayTime)
         {
             _logger.LogDebug($"Delay was {delayTime:g} provided by {typeof(TDelay).Name}.");
 
@@ -70,7 +70,7 @@ namespace MultipleHostedService.Hidden
                 var taskToCall = scope.ServiceProvider.GetRequiredService<TTaskToRun>();
                 try
                 {
-                    await taskToCall.MethodToRunAsync();
+                    await taskToCall.MethodToRunAsync(cancellationToken);
                 }
                 catch (Exception e)
                 {

@@ -44,7 +44,7 @@ namespace Test.UnitTests
             var bg = new NightlyRun1Am(logger);
 
             //ATTEMPT
-            await bg.MethodToRunAsync();
+            await bg.MethodToRunAsync(default);
 
             //VERIFY
             logs.Single().ToString().ShouldStartWith("Information: I ran at UTC = ");
