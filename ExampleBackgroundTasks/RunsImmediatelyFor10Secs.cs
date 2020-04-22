@@ -8,7 +8,7 @@ using MultipleHostedService;
 
 namespace ExampleBackgroundTasks
 {
-    public class RunsImmediatelyFor10Secs : IBackgroundTaskToCall
+    public class RunsImmediatelyFor10Secs : ITaskToRun
     {
         private readonly ILogger<RunsImmediatelyFor10Secs> _logger;
 

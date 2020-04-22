@@ -9,7 +9,7 @@ using MultipleHostedService;
 
 namespace ExampleBackgroundTasks
 {
-    public class RunsEvery10Seconds : ITaskWithDelayIncluded
+    public class RunsEvery10Seconds : ITaskAndDelay
     {
         private readonly ILogger<RunsEvery10Seconds> _logger;
 

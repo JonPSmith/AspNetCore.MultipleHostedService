@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace MultipleHostedService
 {
     public class NonRecurringBackgroundRunner<TTaskToRun> : IOneBackgroundService
-        where TTaskToRun : IBackgroundTaskToCall
+        where TTaskToRun : ITaskToRun
     {
         private readonly ILogger _logger;
 

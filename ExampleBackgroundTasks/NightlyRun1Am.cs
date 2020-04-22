@@ -9,7 +9,7 @@ using MultipleHostedService;
 
 namespace ExampleBackgroundTasks
 {
-    public class NightlyRun1Am : ITaskWithDelayIncluded
+    public class NightlyRun1Am : ITaskAndDelay
     {
         private const int HourToTriggerOn = 1;
         private readonly ILogger<NightlyRun1Am> _logger;

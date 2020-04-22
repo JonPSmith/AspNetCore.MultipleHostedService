@@ -11,15 +11,14 @@ using Test.DataLayer;
 namespace Test.TestHelpers
 {
 
-    public class TestScopedDbTask : IBackgroundTaskToCall
+    public class ScopedDbTask : ITaskToRun
     {
         private readonly IServiceProvider _services;
 
-        public TestScopedDbTask(IServiceProvider services)
+        public ScopedDbTask(IServiceProvider services)
         {
             _services = services;
         }
-
 
         public Task MethodToRunAsync(CancellationToken cancellationToken)
         {

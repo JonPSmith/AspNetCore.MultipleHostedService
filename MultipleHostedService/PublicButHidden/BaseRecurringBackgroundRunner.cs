@@ -17,7 +17,7 @@ namespace MultipleHostedService.PublicButHidden
     /// <typeparam name="TTaskToRun"></typeparam>
     /// <typeparam name="TDelay"></typeparam>
     public abstract class BaseRecurringBackgroundRunner<TTaskToRun, TDelay> : IOneBackgroundService
-        where TTaskToRun : IBackgroundTaskToCall where TDelay : ICalcDelayTillRunTask 
+        where TTaskToRun : ITaskToRun where TDelay : ICalcDelay 
     {
         private readonly TDelay _delayCalc;
         private readonly ILogger _logger;

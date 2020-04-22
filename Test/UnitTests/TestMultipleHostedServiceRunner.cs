@@ -84,9 +84,9 @@ namespace Test.UnitTests
                 var services = new ServiceCollection();
                 services.AddLogging();
                 services.AddDbContext<MyDbContext>(options => options.UseSqlite(sqliteConnection));
-                services.AddSingleton<TestScopedDbTask>();
-                services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<TestScopedDbTask>>();
-                services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<TestScopedDbTask>>();
+                services.AddSingleton<ScopedDbTask>();
+                services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<ScopedDbTask>>();
+                services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<ScopedDbTask>>();
                 services.AddSingleton<IHostedService, MultipleHostedServiceRunner>();
                 var serviceProvider = services.BuildServiceProvider();
                 var service = serviceProvider.GetRequiredService<IHostedService>();

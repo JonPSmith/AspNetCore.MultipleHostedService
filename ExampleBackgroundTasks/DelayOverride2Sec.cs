@@ -6,7 +6,7 @@ using MultipleHostedService;
 
 namespace ExampleBackgroundTasks
 {
-    public class DelayOverride2Sec : ICalcDelayTillRunTask
+    public class DelayOverride2Sec : ICalcDelay
     {
         public TimeZoneInfo TimeZoneToUse { get; } = null;
         public TimeSpan TimeToWait(DateTime localTime)

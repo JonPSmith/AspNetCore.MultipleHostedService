@@ -13,7 +13,7 @@ namespace MultipleHostedService
     /// <typeparam name="TCombined">Type must have both the task to run repeatedly and the code to provide the TimeToWait calc</typeparam>
     public class RecurringBackgroundRunner<TCombined> 
         : BaseRecurringBackgroundRunner<TCombined, TCombined>
-        where TCombined : IBackgroundTaskToCall, ICalcDelayTillRunTask
+        where TCombined : ITaskToRun, ICalcDelay
     {
         public RecurringBackgroundRunner(IServiceProvider services, TCombined delayCalc,
             ILogger<RecurringBackgroundRunner<TCombined>> logger) 
@@ -27,7 +27,7 @@ namespace MultipleHostedService
     /// <typeparam name="TDelay"></typeparam>
     public class RecurringBackgroundRunner<TTaskToRun, TDelay>
         : BaseRecurringBackgroundRunner<TTaskToRun, TDelay>
-        where TTaskToRun : IBackgroundTaskToCall where TDelay : ICalcDelayTillRunTask 
+        where TTaskToRun : ITaskToRun where TDelay : ICalcDelay 
     {
         public RecurringBackgroundRunner(IServiceProvider services, TDelay delayCalc,
             ILogger<RecurringBackgroundRunner<TTaskToRun, TDelay>> logger)
