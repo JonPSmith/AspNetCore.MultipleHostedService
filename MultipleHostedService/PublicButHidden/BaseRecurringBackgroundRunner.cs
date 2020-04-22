@@ -43,7 +43,7 @@ namespace MultipleHostedService.PublicButHidden
                 var delayTime = _delayCalc.TimeToWait(localTime);
                 await Task.Delay(delayTime, _stopCancellationToken).ConfigureAwait(false);
                 if (!_stopCancellationToken.IsCancellationRequested)
-                    await GetScopedTaskAndCallAsync(cancellationToken, delayTime).ConfigureAwait(false);
+                    await GetServiceAndCallAsync(cancellationToken, delayTime).ConfigureAwait(false);
             }
         }
 
@@ -61,20 +61,23 @@ namespace MultipleHostedService.PublicButHidden
         //-------------------------------------------------------
         //private methods
 
-        private async Task GetScopedTaskAndCallAsync(CancellationToken cancellationToken, TimeSpan delayTime)
+        private async Task GetServiceAndCallAsync(CancellationToken cancellationToken, TimeSpan delayTime)
         {
             _logger.LogDebug($"Delay was {delayTime:g} provided by {typeof(TDelay).Name}.");
 
-            using (var scope = _services.CreateScope())
+            var taskToCall = _services.GetService<TTaskToRun>();
+            if (taskToCall == null)
+                _logger.LogError($"The class {typeof(TTaskToRun).Name} was not found as a service.");
+            else
             {
-                var taskToCall = scope.ServiceProvider.GetRequiredService<TTaskToRun>();
                 try
                 {
                     await taskToCall.MethodToRunAsync(cancellationToken);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(new EventId(1,"HostedService"),e, $"The task in {typeof(TTaskToRun).Name} failed with an exception." );
+                    _logger.LogError(new EventId(1, "HostedService"), e,
+                        $"The task in {typeof(TTaskToRun).Name} failed with an exception.");
                     throw;
                 }
             }

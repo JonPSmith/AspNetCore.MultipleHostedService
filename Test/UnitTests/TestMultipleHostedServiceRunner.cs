@@ -1,17 +1,19 @@
 ﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExampleBackgroundTasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.Extensions.Logging;
 using MultipleHostedService;
+using Test.DataLayer;
 using Test.TestHelpers;
+using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -74,28 +76,32 @@ namespace Test.UnitTests
         public async Task TestMultipleHostedServiceRunnerEachHasScopedServiceProviderOk()
         {
             //SETUP
-            var strings = new ConcurrentStack<string>();
-            var services = new ServiceCollection();
-            services.AddLogging();
-            services.AddSingleton(x =>  new ListenToStrings(strings));
-            services.AddScoped<StringProvider>();
-            services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<TestScopedTask>>();
-            services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<TestScopedTask>>();
-            services.AddSingleton<IHostedService, MultipleHostedServiceRunner>();
-            var serviceProvider = services.BuildServiceProvider();
-            var service = serviceProvider.GetRequiredService<IHostedService>();
-
-            //ATTEMPT
-            await service.StartAsync(default);
-            await Task.Delay(1000);
-
-            //VERIFY
-            var string1 = serviceProvider.GetRequiredService<StringProvider>().MyString;
-            var string2 = serviceProvider.GetRequiredService<StringProvider>().MyString;
-            _output.WriteLine(strings.Count.ToString());
-            foreach (var s in strings.ToArray())
+            var sqliteConnection = SqliteServiceExtensions.SetupSqliteInMemoryConnection();
+            using (var context = new MyDbContext(sqliteConnection.GetSqliteOptions()))
             {
-                _output.WriteLine(s);
+                context.Database.EnsureCreated();
+
+                var services = new ServiceCollection();
+                services.AddLogging();
+                services.AddDbContext<MyDbContext>(options => options.UseSqlite(sqliteConnection));
+                services.AddSingleton<TestScopedDbTask>();
+                services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<TestScopedDbTask>>();
+                services.AddSingleton<IOneBackgroundService, NonRecurringBackgroundRunner<TestScopedDbTask>>();
+                services.AddSingleton<IHostedService, MultipleHostedServiceRunner>();
+                var serviceProvider = services.BuildServiceProvider();
+                var service = serviceProvider.GetRequiredService<IHostedService>();
+
+                //ATTEMPT
+                await service.StartAsync(default);
+                await Task.Delay(2000);
+
+                //VERIFY
+                var logs = context.Logs.ToList();
+                logs.Count.ShouldEqual(2);
+                logs[0].ShouldNotEqual(logs[1]);
+                var inScope1 = serviceProvider.GetRequiredService<MyDbContext>().InstanceKey;
+                var inScope2 = serviceProvider.GetRequiredService<MyDbContext>().InstanceKey;
+                inScope1.ShouldEqual(inScope2);
             }
         }
 

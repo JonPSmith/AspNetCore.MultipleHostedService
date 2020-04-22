@@ -28,18 +28,19 @@ namespace MultipleHostedService
         {
             _logger.LogInformation($"Starting non-recurring hosted service {typeof(TTaskToRun).Name}.");
 
-            using (var scope = _services.CreateScope())
+            var taskToCall = _services.GetService<TTaskToRun>();
+            if (taskToCall == null)
+                _logger.LogError($"The class {typeof(TTaskToRun).Name} was not found as a service.");
+            else
             {
-                var taskToCall = scope.ServiceProvider.GetService<TTaskToRun>();
-                if (taskToCall == null)
-                    throw new NullReferenceException($"The class {typeof(TTaskToRun).Name} was not found as a service.");
                 try
                 {
                     await taskToCall.MethodToRunAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(new EventId(1, "HostedService"), e, $"The task in {taskToCall.GetType().Name} failed with an exception.");
+                    _logger.LogError(new EventId(1, "HostedService"), e,
+                        $"The task in {taskToCall.GetType().Name} failed with an exception.");
                     throw;
                 }
             }
