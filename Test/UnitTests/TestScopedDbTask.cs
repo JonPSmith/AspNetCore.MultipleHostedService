@@ -31,6 +31,8 @@ namespace Test.UnitTests
             {
                 context.Database.EnsureCreated();
 
+                //Because the ScopedDbTask uses the IServiceProvider's CreateScope() to get a unique instance of the DbContext
+                //then you need to use a service collection/DI to test it.
                 var services = new ServiceCollection();
                 services.AddLogging();
                 services.AddDbContext<MyDbContext>(options => options.UseSqlite(sqliteConnection));

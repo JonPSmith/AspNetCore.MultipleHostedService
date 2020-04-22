@@ -10,7 +10,7 @@ namespace MultipleHostedService
         /// <summary>
         /// This is the timezone you wish to use. The RecurringBackgroundRunner
         /// uses this to work out the local time from DateTime.UtcNow.
-        /// If null, then the DateTime.UtcNow time used
+        /// If null, then the DateTime.UtcNow time used without any change.
         /// </summary>
         TimeZoneInfo TimeZoneToUse { get; }
 
@@ -19,7 +19,7 @@ namespace MultipleHostedService
         /// </summary>
         /// <param name="localTime">The RecurringBackgroundRunner provides the current
         /// UTC time converted to your timezone.  The reason for having this parameter is
-        /// to allow you to check your delay calculations in a unit test. </param>
+        /// to allow you to check your delay calculations in a unit test.</param>
         /// <returns></returns>
         TimeSpan TimeToWait(DateTime localTime);
     }
